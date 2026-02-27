@@ -45,7 +45,7 @@ for (comm in sort(unique(V(g)$comunidad))) {
   
   genes_comunidad <- V(g)$name[V(g)$comunidad == comm]
   
-  # Convertir a Entrez si son símbolos
+  # Convertir a Entrez en caso de que haya Symbol
   if (!all(grepl("^[0-9]+$", genes_comunidad))) {
     conv <- suppressWarnings(bitr(genes_comunidad, fromType = "SYMBOL", 
                                   toType = "ENTREZID", OrgDb = "org.Hs.eg.db"))
@@ -78,11 +78,11 @@ for (comm in sort(unique(V(g)$comunidad))) {
   
   if (!is.null(enr) && nrow(enr) > 0) {
     resultados_lista[[paste0("Comunidad_", comm)]] <- enr
-    cat("Comunidad", comm, ":", nrow(enr), "términos\n")
+    
   }
 }
 
-# 6. Exportar resultados
+# Exportar resultados
 dir.create("resultados_enriquecimiento", showWarnings = FALSE)
 for (nombre in names(resultados_lista)) {
   df_result <- as.data.frame(resultados_lista[[nombre]]) %>%
@@ -97,7 +97,7 @@ for (nombre in names(resultados_lista)) {
 enr_com1 <- resultados_lista[["Comunidad_1"]]
 
 
-# Dotplot básico (top 20 términos por FDR)
+
 p <- dotplot(enr_com1, 
         showCategory = 20, 
         title = "Comunidad 1 - GO Molecular Function",
